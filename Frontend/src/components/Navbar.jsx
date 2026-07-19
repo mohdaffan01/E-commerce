@@ -48,6 +48,13 @@ const Navbar = ({ user, cartCount, logout }) => {
               Contact us
             </Link>
           </li>
+          {user && (
+            <li className="navbar-item">
+              <Link to="/add-product" className="navbar-link" onClick={() => setIsOpen(false)}>
+                Add Product
+              </Link>
+            </li>
+          )}
         </ul>
 
         {/* Right: Actions (Wishlist, Cart, User/Auth Logos) */}

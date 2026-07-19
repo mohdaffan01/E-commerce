@@ -16,6 +16,7 @@ import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
+import AddProduct from './pages/AddProduct';
 
 
 function App() {
@@ -132,7 +133,10 @@ function App() {
             <Route path="/products/:id" element={<ProductDetails onAddToCart={addToCart} isAuthenticated={!!user} />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
-
+            <Route 
+              path="/add-product" 
+              element={user ? <AddProduct /> : <Navigate to="/login" />} 
+            />
             
             <Route 
               path="/login" 

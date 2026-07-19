@@ -1,68 +1,16 @@
-const Product = require('../models/Product');
+const mongoose = require('mongoose');
+require('dotenv').config();
+const Product = require('./models/Product');
 
-// @desc    Get all products (with filters)
-// @route   GET /api/products
-// @access  Public
-const getProducts = async (req, res) => {
+async function seed() {
   try {
-    const { category, search, legs, priceMax } = req.query;
-    let query = {};
-
-    // Filter by Category (exclude 'All Products' label if sent)
-    if (category && category !== 'All Products') {
-      query.category = category;
-    }
-
-    // Filter by Search Query
-    if (search) {
-      query.name = { $regex: search, $options: 'i' };
-    }
-
-    // Filter by Legs material
-    if (legs) {
-      query.legs = legs;
-    }
-
-    // Filter by Price range
-    if (priceMax) {
-      query.price = { $lte: Number(priceMax) };
-    }
-
-    const products = await Product.find(query);
-    res.json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server error fetching products' });
-  }
-};
-
-// @desc    Get product by ID
-// @route   GET /api/products/:id
-// @access  Public
-const getProductById = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-    res.json(product);
-  } catch (error) {
-    console.error(error);
-    if (error.kind === 'ObjectId') {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-    res.status(500).json({ error: 'Server error fetching product details' });
-  }
-};
-
-// @desc    Seed database with sample products matching screenshot
-// @route   POST /api/products/seed
-// @access  Public
-const seedProducts = async (req, res) => {
-  try {
-    // Clear all existing products first to ensure fresh seed update
+    console.log('Connecting to database...');
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected successfully. Cleaning and seeding products...');
+    
+    // Clear all existing products first
     await Product.deleteMany({});
-
+    
     const sampleProducts = [
       {
         name: 'Customizable Desk',
@@ -187,46 +135,12 @@ const seedProducts = async (req, res) => {
     ];
 
     const createdProducts = await Product.insertMany(sampleProducts);
-    res.status(201).json({ message: 'Products seeded successfully', count: createdProducts.length });
+    console.log(`Successfully seeded ${createdProducts.length} products to database.`);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server error during product seeding' });
+    console.error('Error seeding database:', error);
+  } finally {
+    mongoose.connection.close();
   }
-};
+}
 
-// @desc    Create a product
-// @route   POST /api/products
-// @access  Private
-const createProduct = async (req, res) => {
-  try {
-    const { name, description, price, image, category, stock, tag, legs } = req.body;
-
-    if (!name || !description || !price || !image || !category) {
-      return res.status(400).json({ error: 'Please provide all required fields' });
-    }
-
-    const product = new Product({
-      name,
-      description,
-      price: Number(price),
-      image,
-      category,
-      stock: Number(stock) || 0,
-      tag: tag || '',
-      legs: legs || 'None'
-    });
-
-    const createdProduct = await product.save();
-    res.status(201).json(createdProduct);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server error creating product' });
-  }
-};
-
-module.exports = {
-  getProducts,
-  getProductById,
-  seedProducts,
-  createProduct,
-};
+seed();

@@ -113,9 +113,14 @@ const Products = ({ onAddToCart, isAuthenticated }) => {
         <div className="filter-group category">
           <select value={categoryFilter} onChange={handleCategoryChange}>
             <option value="">All Categories</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Accessories">Accessories</option>
-            <option value="Bags & Luggage">Bags & Luggage</option>
+            <option value="Desks">Desks</option>
+            <option value="Furnitures">Furnitures</option>
+            <option value="Boxes">Boxes</option>
+            <option value="Drawers">Drawers</option>
+            <option value="Cabinets">Cabinets</option>
+            <option value="Bins">Bins</option>
+            <option value="Lamps">Lamps</option>
+            <option value="Multimedia">Multimedia</option>
           </select>
         </div>
 
