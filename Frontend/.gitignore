@@ -1,0 +1,46 @@
+# Dependencies and production builds
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Environment variables (Vite configurations)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+*.env
+
+# Local development caches
+.vite/
+.eslintcache
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
+
+# Debug and system logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor and IDE configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS metadata
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+desktop.ini
